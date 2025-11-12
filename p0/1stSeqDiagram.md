@@ -5,7 +5,7 @@ sequenceDiagram
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
-    server-->>browser: HTML document
+    server-->>browser: Status code 302 and redirects  https://studies.cs.helsinki.fi/exampleapp/notes
     deactivate server
 
 
