@@ -13,17 +13,41 @@ const Section=({text})=>{
     <div><h2>{text}</h2></div>
   )
 }
-const Detail=({details})=>{
+const StatisticLine=({text,value})=>{
   return(<>
-      <Section text="statistics"/>
-      <div>good {details[0]}</div>
-      <div>netural {details[1]}</div>
-      <div>bad {details[2]}</div>
-      <div>all {details[0]+details[1]+details[2]}</div>
-      <div>average {(details[0]-details[2])/(details[0]+details[1]+details[2])}</div>
-      <div>positive {details[0]*100/(details[0]+details[1]+details[2])}%</div>
-      </>)
+    <table>
+      <tr>
+        <td width="50">{text}</td>
+        <td>{value}</td>
+      </tr>
+    </table></>
+  )
 }
+const Statisticks =({details})=>{
+      if(details[0]+details[1]+details[2]>0){
+          return(
+          <>
+            <Section text="statistics"/>
+            <StatisticLine text="good" value ={details[0]} />
+            <StatisticLine text="neutral" value ={details[1]} />
+            <StatisticLine text="bad" value ={details[2]} />
+            <StatisticLine text="all" value ={details[0]+details[1]+details[2]} />
+            <StatisticLine text="average" value ={(details[0]-details[2])/(details[0]+details[1]+details[2])} />
+            <StatisticLine text="positive" value ={(details[0]/(details[0]+details[1]+details[2]))*100 + " %"} />
+            </>
+          )
+      }
+      else{
+        return(
+          <>
+          <Section text="statistics"/>
+          <div>No feedback given</div>
+          </>
+        )
+      }
+}
+
+//main app code compiles here
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -39,7 +63,7 @@ const App = () => {
       <Button onClick={handlegoodClick} text="Good"/>
       <Button onClick={handlenetrualClick} text="netural"/>
       <Button onClick={handlebadClick} text="Bad"/>
-      <Detail details={[good,neutral,bad]}/>
+      <Statisticks details={[good,neutral,bad]}/>
     </div>
   )
 }
