@@ -1,5 +1,9 @@
 import {useEffect, useState } from 'react'
 import personService from './services/Person'
+import './index.css'
+import Notes from './Compnents/Notifications'
+
+
 
 const Filter = ({search,handleSearch})=>{
   return(
@@ -51,6 +55,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNo,setNewNo]=useState('')
   const [search,setSearch]=useState('')
+  const [message, setMessage] = useState(null)
   
 
   const hook = () => {
@@ -77,6 +82,13 @@ const App = () => {
           setNewName('')
           setNewNo('')
         })
+        .catch(error=>{
+          setMessage({text:`Information of ${person.name} has already been removed from server`,type:'error'})
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000);
+          setPersons(persons.filter(p=>p.id!==person.id))
+        })
       return
     }
     if (noExists){
@@ -90,6 +102,11 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNo('')
+        setMessage({text:`Added ${returnedPerson.name}`
+        ,type:'success'})
+          setTimeout(() => {
+          setMessage(null)
+        }, 5000);
       })
    
   }
@@ -124,6 +141,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter search={search} handleSearch={handleSearch} />
+      <Notes message={message} />
       <h2>Add new</h2>
       <PersonForm addDetails={addDetails} newName={newName} handleNameChange={handleNameChange} newNo={newNo} handleNoChange={handleNoChange}/>
       <h2>Numbers</h2>
