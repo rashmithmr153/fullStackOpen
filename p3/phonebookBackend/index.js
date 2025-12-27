@@ -1,5 +1,16 @@
-const Express=require('express');
+const Express=require('express')
+const morgan = require('morgan')
 const app=Express();
+const PORT = 3001
+
+morgan.token('body', (request) => {
+  return JSON.stringify(request.body)
+})
+
+app.use(
+  morgan(':method :url :status :res[content-length] :response-time ms :body')
+)
+
 app.use(Express.json())
 let persons=[
     { 
@@ -69,7 +80,6 @@ app.post('/api/persons',(request,response)=>{
   if(nameExists){
     return response.status(400).json({'error':'name must be unique'})
   }
-  console.log('look here---------------->',newId)
   const person={
     'id':newId,
     'name':body.name,
@@ -77,12 +87,14 @@ app.post('/api/persons',(request,response)=>{
   }
   persons=persons.concat(person)
   response.json(person)
-})
+ })
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
 
+app.use(unknownEndpoint)
 
-
-const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
